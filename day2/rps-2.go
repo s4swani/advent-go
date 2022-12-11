@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"os"
 	"log"
+	"strings"
 )
 
 
@@ -20,26 +21,14 @@ func isError (err error) bool {
 
 func main() {
 
-	//	const op_hand [3]string = {"A", "B", "C"}
-	//	const my_hand [3]string = {"X", "Y", "Z"}
-
 	var ip_file, error = os.Open("input-file.txt")
 
-	var strategy string = ""
+	var res [] string
+	var rock = map[string]int  {"X":3, "Y":1, "Z":2}
+	var paper = map[string]int {"X":1, "Y":2, "Z":3}
+	var scissor = map[string]int {"X":2, "Y":3, "Z":1}
 
 	var total_score int = 0
-
-	scoring := make( map[string]int)
-	
-	scoring["A X"] = 4
-	scoring["A Y"] = 8
-	scoring["A Z"] = 3
-	scoring["B X"] = 1
-	scoring["B Y"] = 5
-	scoring["B Z"] = 9
-	scoring["C X"] = 7
-	scoring["C Y"] = 2
-	scoring["C Z"] = 6
 
 	defer ip_file.Close()
 
@@ -52,8 +41,26 @@ func main() {
 	// keep reading until EOF
 	for scanner.Scan() {
 
-		strategy = scanner.Text()
-		total_score += scoring[strategy]
+		res = strings.SplitAfter(scanner.Text(), " ")
+		opponent_hand := strings.TrimSpace(res[0])
+
+		switch opponent_hand {			
+		case "A": 
+			total_score += rock[res[1]]			
+		case "B":
+			total_score += paper[res[1]]			
+		case "C":
+			total_score += scissor[res[1]]
+		}
+
+		if res[1] == "Y" {
+			total_score += 3
+		}
+
+		if res[1] == "Z" {
+			total_score += 6
+		}
+
 	}
 
 	fmt.Println("Total score = ", total_score)
