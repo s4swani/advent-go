@@ -20,16 +20,11 @@ func isError (err error) bool {
 
 func main () {
 
-	/* Build the priority values map*/
 	var priority = make(map[string]int)
-	
 	var total_priority int = 0
-
-
-	var foundInThree bool
-	
 	var badgeToken string = ""
 
+	/* Build the priority map */
 	for i:=97; i<123; i++ {
 		priority[string(i)] = i-96
 	}
@@ -37,6 +32,7 @@ func main () {
 	for i:=65; i<91; i++ {
 		priority[string(i)] = i-38
 	}
+	
 
 	var ip_file, err = os.Open("ip-file")
 
@@ -46,8 +42,8 @@ func main () {
 		return
 	}
 
+	
 	scanner := bufio.NewScanner(ip_file)
-
 
 	for scanner.Scan() {
 
@@ -59,30 +55,16 @@ func main () {
 		scanner.Scan()
 		rucksackC := scanner.Text()
 		
-		for i:=0; i<len(rucksackA); i++ {
+		for i, _ := range rucksackA {
 			
-			badgeToken = ""
-			
-			foundInThree = false
-
-			if strings.Contains(rucksackB, string(rucksackA[i])) {
-				
-				for j:=0; j<len(rucksackC); j++ {
-					if strings.Contains(rucksackC, string(rucksackA[i])) {
-						foundInThree = true
-						badgeToken = string(rucksackA[i])
-						break
-					}
-				}
-				
-				if foundInThree {
-					break
-				}				
-			}
-		}
+			badgeToken = string(rucksackA[i])
 	
-		if foundInThree {
-			total_priority += priority[badgeToken]
+			if strings.Contains(rucksackB, badgeToken) &&
+				strings.Contains(rucksackC, badgeToken) {
+				
+				total_priority += priority[badgeToken]	
+				break
+			}
 		}
 	}
 
