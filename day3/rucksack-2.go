@@ -67,7 +67,6 @@ func main () {
 			}
 		}
 	}
-
 	fmt.Println ("Total priority = ", total_priority)
 }
 
