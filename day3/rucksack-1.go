@@ -51,20 +51,15 @@ func main () {
 		firstComp := rucksack[0:length/2]
 		secondComp := rucksack[length/2:length]
 
-		/*
-		 * go through each character in the first half
-		 * and check if it exists in the second half 
-		 */
-
+		/* check if there are any common characters */
 		for i:=0; i<len(firstComp); i++ {
-			if strings.Contains(secondComp, string(firstComp[i])) {
-				total_priority += priority[string(firstComp[i])]
+			priorityToken := string(firstComp[i])
+			if strings.Contains(secondComp, priorityToken) {
+				total_priority += priority[priorityToken]
 				break //only need to count once
 			}
 		}
 	}
 
 	fmt.Println("Total priority = ", total_priority)
-
-
 }
