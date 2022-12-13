@@ -3,20 +3,20 @@ package main
 import (
 	"fmt"
 // 	"strings"
-// 	"bufio"
-// 	"os"
-// 	"log"
+ 	"bufio"
+ 	"os"
+ 	"log"
 )
 
-// func isError (err error) bool {
+func isError (err error) bool {
 
-// 	if (err != nil) {
-// 		log.Fatal(err)
-// 		fmt.Println(err)
-// 	}
+	if (err != nil) {
+		log.Fatal(err)
+		fmt.Println(err)
+	}
 
-// 	return (err != nil)
-// }
+	return (err != nil)
+}
 
 type crate struct {
 	label uint8
@@ -26,59 +26,92 @@ type crate struct {
 
 func push(new_crate *crate, stack **crate) {
 
-	fmt.Printf ("\n%p %p\n", new_crate, *stack)
-	
-	if (*stack) != nil {
-		//		fmt.Printf("adding element: %c\n",new_crate.label)
+	if *stack != nil {
 		new_crate.next = *stack
 	}
-	
+
 	*stack = new_crate
-	fmt.Printf ("%p%v %p%v\n\n", new_crate, new_crate, *stack, **stack)
 }
 
-// func (stack *crate) pop() *crate {
-
-// 	temp := stack
-// 	stack = stack.next
-// 	temp.next = nil
-
-// 	return &temp
-// }
-
-func (stack *crate) print_stack() {
+func (stack *crate) pop() *crate {
 	var temp *crate
+
 	temp = stack
-	
+	stack = stack.next
+	temp.next = nil
+
+	return temp
+}
+
+func (stack *crate) print_stack(number int) {
+	var temp *crate
+
+	fmt.Printf("Stack[%d]: ", number)
+	temp = stack
+
 	for temp != nil {
 		fmt.Printf("%c -> ",temp.label)
-				
 		temp = temp.next
 	}
+	
 	fmt.Printf("nil\n")
 }
 
 
 func main () {
-	var stacks = new(*crate)
-	var temp crate = crate{'A',nil}
+	var stack [9]**crate
+	//	var temp *crate
+
+	init_stack := [9]string{
+		"DHNQTWVB",
+		"DWB",
+		"TSQWJC",
+		"FJRNZTP",
+		"GPVJMST",
+		"BWFTN",
+		"BLDQFHVN",
+		"HPFR",
+		"ZSMBLNPH",
+	} 
+
+	for i:=0; i<9; i++ {
+		stack[i] = new (*crate)
 		
+		for j:=0; j<len(init_stack[i]); j++ {
+			push(&crate{init_stack[i][j], nil}, stack[i])
+		}
+	}
 
-	//	fmt.Printf("%p%v %p%v\n", &temp,temp, stacks,*stacks)
+	for i:=0; i<9; i++ {
+		(*stack[i]).print_stack(i+1)
+	}
 
-	push(&temp, stacks)
+	ip_file, err := os.Open("ip-file")
 
-	//	fmt.Printf("%p%v %p%v\n", &temp,temp, stacks,*stacks)
+	defer ip_file.Close()
 	
-	push(&crate{'B', nil}, stacks)
+	if isError(err) {
+		return
+	}
 
-	//	fmt.Printf("%p%v %p%v\n", &temp,temp, stacks,*stacks)
+	// skip the input file until instructions
+	scanner := bufio.NewScanner(ip_file)
+	for scanner.Scan() {
 
-	push(&crate{'C', nil}, stacks)
+		fmt.Println (scanner.Text())
+		if scanner.Text() == "" {
+			break
+		}
+	}
 
-	push(&crate{'D', nil}, stacks)
+	// start reading here and performing the actions
 
-	(*stacks).print_stack()
 
+	
+	//	temp = (*stack[0]).pop()
+	//	fmt.Printf("Popped %c at %p\n", temp.label, &temp)
+	
+
+	
 
 }
