@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-// 	"strings"
+ 	"strings"
  	"bufio"
  	"os"
  	"log"
+	"strconv"
 )
 
 func isError (err error) bool {
@@ -29,16 +30,19 @@ func push(new_crate *crate, stack **crate) {
 	if *stack != nil {
 		new_crate.next = *stack
 	}
-
+	
 	*stack = new_crate
 }
 
-func (stack *crate) pop() *crate {
-	var temp *crate
+func pop(stack **crate) *crate {
+	var temp *crate = nil
 
-	temp = stack
-	stack = stack.next
-	temp.next = nil
+	if *stack != nil {
+
+		temp = *stack
+		*stack = (*stack).next
+		temp.next = nil
+	}
 
 	return temp
 }
@@ -50,7 +54,7 @@ func (stack *crate) print_stack(number int) {
 	temp = stack
 
 	for temp != nil {
-		fmt.Printf("%c -> ",temp.label)
+		fmt.Printf("%c -> ", temp.label)
 		temp = temp.next
 	}
 	
@@ -60,7 +64,7 @@ func (stack *crate) print_stack(number int) {
 
 func main () {
 	var stack [9]**crate
-	//	var temp *crate
+	var temp *crate
 
 	init_stack := [9]string{
 		"DHNQTWVB",
@@ -74,16 +78,13 @@ func main () {
 		"ZSMBLNPH",
 	} 
 
+	// initialise the stacks
 	for i:=0; i<9; i++ {
 		stack[i] = new (*crate)
 		
 		for j:=0; j<len(init_stack[i]); j++ {
 			push(&crate{init_stack[i][j], nil}, stack[i])
 		}
-	}
-
-	for i:=0; i<9; i++ {
-		(*stack[i]).print_stack(i+1)
 	}
 
 	ip_file, err := os.Open("ip-file")
@@ -98,20 +99,30 @@ func main () {
 	scanner := bufio.NewScanner(ip_file)
 	for scanner.Scan() {
 
-		fmt.Println (scanner.Text())
 		if scanner.Text() == "" {
 			break
 		}
 	}
 
 	// start reading here and performing the actions
+	for scanner.Scan() {
+		
+		actions := strings.Split(scanner.Text(), " ")
 
+		how_many, _ := strconv.Atoi(actions[1])
+		from_index, _ := strconv.Atoi(actions[3])
+		to_index, _ := strconv.Atoi(actions[5])
 
-	
-	//	temp = (*stack[0]).pop()
-	//	fmt.Printf("Popped %c at %p\n", temp.label, &temp)
-	
+		from_index -= 1
+		to_index -= 1
 
-	
+		for i := 0; i < how_many; i++ {
+			temp = pop(stack[from_index])
+			push(temp, stack[to_index])
+		}		
+	}
 
+	for i:=0; i<9; i++ {
+		(*stack[i]).print_stack(i+1)
+	}
 }
