@@ -46,7 +46,7 @@ func get_start(ip_file []uint8, packet_length int) int {
 		}
 	}
 	
-	return i + 4
+	return i + packet_length
 }
 
 
