@@ -45,16 +45,20 @@ func main() {
 		elf2_lo, _ := strconv.Atoi(elf2[0])
 		elf2_hi, _ := strconv.Atoi(elf2[1])
 
-		if ( ( (elf1_lo >= elf2_lo) && (elf1_hi <= elf2_hi) ) ||
-			( (elf1_lo <= elf2_lo) && (elf1_hi >= elf2_hi) ) ) {
+		if (
+			((elf1_lo >= elf2_lo) && (elf1_hi <= elf2_hi)) ||
+				((elf1_lo <= elf2_lo) && (elf1_hi >= elf2_hi))
+		) {
 
 			full_overlap_count++
 		}
 
-		if ( ((elf1_lo >= elf2_lo) && (elf1_lo <= elf2_hi)) ||
+		if (
+			((elf1_lo >= elf2_lo) && (elf1_lo <= elf2_hi)) ||
 			((elf1_hi >= elf2_lo) && (elf1_hi <= elf2_hi)) ||
 			((elf2_lo >= elf1_lo) && (elf2_lo <= elf1_hi)) ||
-			((elf2_hi >= elf1_lo) && (elf2_hi <= elf1_hi)) ) {
+			((elf2_hi >= elf1_lo) && (elf2_hi <= elf1_hi))
+		) {
 
 			partial_overlap_count++
 		}
