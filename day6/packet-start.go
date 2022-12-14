@@ -33,8 +33,9 @@ func packet_start (packet string, length int) bool {
 
 func get_start(ip_file []uint8, packet_length int) int {
 	var i int = 0
-	
-	for i = 0; i < len(ip_file); i++ {
+
+	// can use range instead of len(ip_file)
+	for i = range ip_file {
 		
 		if packet_start(string(ip_file[i:i + packet_length]), packet_length) {
 			break
@@ -47,6 +48,8 @@ func get_start(ip_file []uint8, packet_length int) int {
 
 func main() {
 	var packet_start, message_start int = 0, 0
+
+	const pkt_length, msg_length int = 4, 14
 		
 	ip_file, err := ioutil.ReadFile("ip-file")	
 
@@ -54,9 +57,9 @@ func main() {
 		return
 	}
 
-	packet_start = get_start(ip_file, 4)
+	packet_start = get_start(ip_file, pkt_length)
 
-	message_start = get_start(ip_file, 14)
+	message_start = get_start(ip_file, msg_length)
 
 	fmt.Printf("Start of packet = %d\n", packet_start)
 
